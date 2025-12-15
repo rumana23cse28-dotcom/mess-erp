@@ -61,26 +61,29 @@ def login():
 
 
 # ================= GOOGLE LOGIN (DEMO) =================
+# ================= GOOGLE LOGIN =================
 @app.route("/login/google")
 def google_login():
-   redirect_uri = url_for("google_callback", _external=True)
+    redirect_uri = url_for("google_callback", _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
+
 
 @app.route("/auth/google/callback")
 def google_callback():
     token = oauth.google.authorize_access_token()
-    user_info = oauth.google.get("https://www.googleapis.com/oauth2/v2/userinfo").json()
+    user_info = oauth.google.get(
+        "https://www.googleapis.com/oauth2/v2/userinfo"
+    ).json()
 
     email = user_info["email"]
 
-    # ---------- ROLE DECISION ----------
+    # ROLE DECISION
     if email == "principal@gmail.com":
         role = "principal"
     elif email == "incharge@gmail.com":
         role = "incharge"
     else:
         role = "student"
-    # ----------------------------------
 
     con = get_db()
     cur = con.cursor()
@@ -95,7 +98,7 @@ def google_callback():
         )
         con.commit()
     else:
-        role = user[0]   # DB role priority
+        role = user[0]
 
     con.close()
 
@@ -103,6 +106,7 @@ def google_callback():
     session["role"] = role
 
     return redirect(f"/{role}/dashboard")
+
 
 # ================= DASHBOARDS =================
 @app.route('/principal/dashboard')

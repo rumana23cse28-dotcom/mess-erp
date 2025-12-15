@@ -1,5 +1,6 @@
 import os
-from flask import Flask, render_template, request, redirect, session, send_file
+
+from flask import Flask, render_template, request, redirect, session, send_file , url_for
 import sqlite3
 from datetime import date
 from io import BytesIO
@@ -62,7 +63,7 @@ def login():
 # ================= GOOGLE LOGIN (DEMO) =================
 @app.route("/login/google")
 def google_login():
-    redirect_uri = "http://127.0.0.1:5000/auth/google/callback"
+   redirect_uri = url_for("google_callback", _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
 
 @app.route("/auth/google/callback")

@@ -1,0 +1,31 @@
+<!-- Student Dashboard -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Student Dashboard</h3>
+
+<div class="card p-3 mb-4">
+  <h5>Available Mess Stock (View Only)</h5>
+  <p class="text-muted">Students can only view remaining stock.</p>
+</div>
+
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Item</th>
+      <th>Remaining Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td class="{% if row[1] < 5 %}text-danger fw-bold{% else %}text-success fw-bold{% endif %}">
+        {{ row[1] }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

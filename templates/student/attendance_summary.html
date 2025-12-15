@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">My Attendance Summary</h3>
+
+<!-- ✅ ONE LINE UPDATE ADDED -->
+<p class="text-muted">Last updated: Today</p>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card p-3 text-center">
+      <h5>Total Days</h5>
+      <h2>{{ total }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 text-center text-success">
+      <h5>Present Days</h5>
+      <h2>{{ present }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 text-center text-primary">
+      <h5>Attendance %</h5>
+      <h2>{{ percent }}%</h2>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<h4 class="mt-4">Attendance Chart</h4>
+
+<canvas id="attendanceChart" width="300" height="300"></canvas>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('attendanceChart');
+
+new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Present', 'Absent'],
+    datasets: [{
+      data: [{{ present }}, {{ total - present }}],
+      backgroundColor: ['#28a745', '#dc3545']
+    }]
+  },
+});
+</script>
+
+{% endblock %}

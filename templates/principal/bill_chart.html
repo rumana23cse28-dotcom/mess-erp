@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="mb-4">Payment Status Chart</h3>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="row">
+  <div class="col-md-6">
+    <canvas id="billChart"></canvas>
+  </div>
+</div>
+
+<script>
+new Chart(document.getElementById("billChart"), {
+  type: "doughnut",
+  data: {
+    labels: ["Paid", "Due"],
+    datasets: [{
+      data: [{{ paid }}, {{ due }}],
+      backgroundColor: ["green", "red"]
+    }]
+  }
+});
+</script>
+
+{% endblock %}

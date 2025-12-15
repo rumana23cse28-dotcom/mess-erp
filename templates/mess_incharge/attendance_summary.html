@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Attendance Summary (Mess Incharge)</h3>
+
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>Student</th>
+      <th>Total Days</th>
+      <th>Present Days</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

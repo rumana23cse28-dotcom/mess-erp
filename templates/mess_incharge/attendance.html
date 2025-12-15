@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Mark Attendance</h3>
+
+<form method="POST" class="row g-2 mb-4">
+  <div class="col-md-4">
+    <input type="email" name="student_email" class="form-control" placeholder="Student Email" required>
+  </div>
+  <div class="col-md-4">
+    <select name="status" class="form-control">
+      <option value="Present">Present</option>
+      <option value="Absent">Absent</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <button class="btn btn-success w-100">Save</button>
+  </div>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>Date</th>
+      <th>Student</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in data %}
+    <tr>
+      <td>{{ a[0] }}</td>
+      <td>{{ a[1] }}</td>
+      <td>{{ a[2] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

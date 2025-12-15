@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Attendance Summary (All Students)</h3>
+
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>Student Email</th>
+      <th>Total Days</th>
+      <th>Present Days</th>
+      <th>Attendance %</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in data %}
+    <tr>
+      <td>{{ s[0] }}</td>
+      <td>{{ s[1] }}</td>
+      <td>{{ s[2] }}</td>
+      <td>
+        {% if s[1] %}
+          {{ ((s[2]/s[1])*100)|round(2) }}%
+        {% else %}
+          0%
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+<!-- Reports -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Reports</h3>
+
+<div class="row">
+
+  <div class="col-md-6">
+    <div class="card shadow mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Inventory Report</h5>
+        <p class="card-text">
+          Complete stock details with remaining quantity.
+        </p>
+        <a href="/inventory/pdf" class="btn btn-primary">
+          Download Inventory PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card shadow mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Mess Menu Report</h5>
+        <p class="card-text">
+          Date-wise breakfast, lunch & dinner.
+        </p>
+        <a href="/menu/pdf" class="btn btn-success">
+          Download Menu PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

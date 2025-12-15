@@ -1,0 +1,26 @@
+<!-- User Management -->
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Users Management</h3>
+
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ u[0] }}</td>
+      <td>{{ u[1] }}</td>
+      <td class="fw-bold text-capitalize">{{ u[3] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

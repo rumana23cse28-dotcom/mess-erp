@@ -1,0 +1,55 @@
+<!-- Menu Management -->
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Mess Menu Management</h3>
+
+  {% if role == 'principal' %}
+  <a href="/menu/pdf" class="btn btn-primary">Download Menu PDF</a>
+  {% endif %}
+</div>
+
+<!-- ADD MENU FORM -->
+<form method="POST" class="row g-2 mb-4">
+  <div class="col-md-3">
+    <input type="date" name="date" class="form-control" required>
+  </div>
+  <div class="col-md-3">
+    <input type="text" name="breakfast" class="form-control" placeholder="Breakfast" required>
+  </div>
+  <div class="col-md-3">
+    <input type="text" name="lunch" class="form-control" placeholder="Lunch" required>
+  </div>
+  <div class="col-md-3">
+    <input type="text" name="dinner" class="form-control" placeholder="Dinner" required>
+  </div>
+
+  <div class="col-md-12 mt-2">
+    <button class="btn btn-success w-100">Save Menu</button>
+  </div>
+</form>
+
+<!-- MENU TABLE -->
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Date</th>
+      <th>Breakfast</th>
+      <th>Lunch</th>
+      <th>Dinner</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>{{ row[4] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

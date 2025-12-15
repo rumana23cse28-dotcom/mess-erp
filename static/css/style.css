@@ -1,0 +1,248 @@
+:root {
+  --primary: #1e3a8a;       /* Deep Blue */
+  --primary-hover: #16337a;
+  --dark: #0f172a;          /* Dark Sidebar */
+  --success: #16a34a;       /* Green */
+  --danger: #dc2626;        /* Red */
+  --light-bg: #f8fafc;      /* Light page background */
+  --card-bg: #ffffff;        /* Card background */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --sidebar-width: 220px;
+  --sidebar-collapsed: 60px;
+}
+
+/* ---------------- BODY ---------------- */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--light-bg);
+  color: #1f2937;
+}
+
+/* ---------------- NAVBAR ---------------- */
+nav, .navbar {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px var(--shadow-color);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+nav a, .navbar a {
+  color: #fff;
+  margin-right: 15px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+nav a:hover, .navbar a:hover {
+  color: #fbbf24; /* subtle gold hover */
+}
+
+/* ---------------- SIDEBAR ---------------- */
+.sidebar {
+  background-color: var(--dark);
+  color: #fff;
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 20px;
+  transition: width 0.3s;
+}
+
+.sidebar h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.sidebar a {
+  display: block;
+  color: #fff;
+  padding: 12px 20px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: var(--primary);
+  transform: translateX(3px);
+}
+
+/* ---------------- MAIN CONTENT ---------------- */
+.main-content {
+  margin-left: var(--sidebar-width);
+  padding: 25px;
+  transition: margin-left 0.3s;
+}
+
+/* ---------------- CARDS ---------------- */
+.card {
+  background: var(--card-bg);
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px var(--shadow-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px var(--shadow-color);
+}
+
+/* ---------------- HEADINGS ---------------- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* ---------------- BUTTONS ---------------- */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.btn-google {
+  background-color: #fff;
+  color: #444;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.btn-google:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+/* ---------------- TABLES ---------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table th, table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+table th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+table tr:hover {
+  background-color: #fef3c7; /* subtle highlight */
+}
+
+/* ---------------- STOCK STATUS ---------------- */
+.stock-ok {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.stock-low {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+/* ---------------- ROLE BADGES ---------------- */
+.role-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.role-principal { background-color: var(--primary); }
+.role-incharge { background-color: var(--dark); }
+.role-student { background-color: var(--success); }
+
+/* ---------------- INCHARGE DASHBOARD SPECIFIC ---------------- */
+.incharge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.incharge-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.incharge-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 18px var(--shadow-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.incharge-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px var(--shadow-color);
+}
+
+.incharge-table-container {
+  overflow-x: auto;
+}
+
+.incharge-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.incharge-table th, .incharge-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.incharge-table th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+.incharge-table tr:hover {
+  background-color: #fef3c7;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media screen and (max-width: 768px) {
+  .sidebar { width: var(--sidebar-collapsed); }
+  .main-content { margin-left: var(--sidebar-collapsed); }
+  nav a { display: none; }
+  .incharge-cards { grid-template-columns: 1fr; }
+}

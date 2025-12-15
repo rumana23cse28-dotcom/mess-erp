@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Mess Bill Details</h3>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Student Email</th>
+      <th>Month</th>
+      <th>Present Days</th>
+      <th>Amount (₹)</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for bill in data %}
+    <tr>
+      <td>{{ bill[0] }}</td>
+      <td>{{ bill[1] }}</td>
+      <td>{{ bill[2] }}</td>
+      <td>{{ bill[3] }}</td>
+      <td class="fw-bold">₹ {{ bill[4] }}</td>
+
+      <td>
+        {% if bill[5] == 'Paid' %}
+          <span class="badge bg-success">Paid</span>
+        {% else %}
+          <span class="badge bg-danger">Due</span>
+        {% endif %}
+      </td>
+
+      <td>
+        <a href="/bill/pdf/{{ bill[0] }}" class="btn btn-sm btn-primary">
+          PDF
+        </a>
+
+        {% if role == 'principal' and bill[5] == 'Due' %}
+        <a href="/bill/paid/{{ bill[0] }}" class="btn btn-sm btn-success">
+          Mark Paid
+        </a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+{% endblock %}

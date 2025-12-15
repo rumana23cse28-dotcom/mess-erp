@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mess ERP System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- TOP NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Mess ERP</a>
+    <span class="badge bg-light text-dark text-uppercase">
+      {{ role }}
+    </span>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- SIDEBAR -->
+    <div class="col-md-2 bg-dark text-white min-vh-100 p-3">
+      <ul class="nav flex-column">
+
+        <!-- DASHBOARD -->
+        <li class="nav-item">
+          {% if role == 'principal' %}
+            <a class="nav-link text-white" href="/principal/dashboard">Dashboard</a>
+          {% elif role == 'incharge' %}
+            <a class="nav-link text-white" href="/incharge/dashboard">Dashboard</a>
+          {% else %}
+            <a class="nav-link text-white" href="/student/dashboard">Dashboard</a>
+          {% endif %}
+        </li>
+
+        <!-- INVENTORY -->
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/inventory">Inventory</a>
+        </li>
+
+        <!-- MENU -->
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/menu">Menu</a>
+        </li>
+
+        <!-- ATTENDANCE -->
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/attendance">🧾 Attendance</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/attendance/summary">
+            📊 Attendance Summary
+          </a>
+        </li>
+
+        {% if role == 'principal' %}
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/attendance/summary/pdf">
+            📊 Attendance Summary PDF
+          </a>
+        </li>
+        {% endif %}
+
+        <!-- REPORTS (PRINCIPAL ONLY) -->
+        {% if role == 'principal' %}
+        <li class="nav-item mt-3">
+          <span class="text-secondary small ms-2">REPORTS</span>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/inventory/pdf">
+            📦 Inventory Report
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/menu/pdf">
+            🍽️ Menu Report
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/attendance/pdf">
+            🧑‍🎓 Attendance Report
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/report/monthly/pdf">
+            📄 Monthly Report
+          </a>
+        </li>
+        {% endif %}
+
+        <!-- LOGOUT -->
+        <li class="nav-item mt-4">
+          <a class="nav-link text-danger fw-bold" href="/logout">Logout</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="col-md-10 p-4">
+      {% block content %}{% endblock %}
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

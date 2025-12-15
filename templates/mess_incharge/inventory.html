@@ -1,0 +1,51 @@
+<!-- Inventory Update -->
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Inventory Management</h3>
+</div>
+
+{% if can_add %}
+<form method="POST" class="row g-2 mb-4">
+  <div class="col-md-3">
+    <input type="text" name="item" class="form-control" placeholder="Item" required>
+  </div>
+  <div class="col-md-3">
+    <input type="number" step="0.1" name="added" class="form-control" placeholder="Added Qty" required>
+  </div>
+  <div class="col-md-3">
+    <input type="number" step="0.1" name="used" class="form-control" placeholder="Used Qty" required>
+  </div>
+  <div class="col-md-3">
+    <button class="btn btn-success w-100">Save</button>
+  </div>
+</form>
+{% endif %}
+
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Date</th>
+      <th>Item</th>
+      <th>Added</th>
+      <th>Used</th>
+      <th>Remaining</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[5] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td class="{% if row[4] < 5 %}text-danger fw-bold{% else %}text-success fw-bold{% endif %}">
+        {{ row[4] }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

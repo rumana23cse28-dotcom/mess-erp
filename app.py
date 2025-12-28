@@ -32,6 +32,12 @@ oauth.register(
     }
 )
 
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 
 # ================= DB CONNECTION =================
@@ -60,7 +66,7 @@ def login():
     return render_template('auth/login.html')
 
 
-# ================= GOOGLE LOGIN (DEMO) =================
+# ===============
 # ================= GOOGLE LOGIN =================
 @app.route("/login/google")
 def google_login():
@@ -74,6 +80,17 @@ def google_callback():
     user_info = oauth.google.get(
         "https://www.googleapis.com/oauth2/v2/userinfo"
     ).json()
+
+        # ---------- AUTO CREATE STUDENT PROFILE ----------
+    con = get_db()
+    cur = con.cursor()
+
+    cur.execute(
+        "INSERT OR IGNORE INTO student_profile (email, name) VALUES (?, ?)",
+        (email, user_info.get("name", ""))
+    )
+    con.commit()
+
 
     email = user_info["email"]
 
@@ -223,6 +240,7 @@ def inventory_pdf():
 
 
 # ================= MENU =================
+# ================= MENU =================
 @app.route('/menu', methods=['GET', 'POST'])
 def menu():
     if 'role' not in session:
@@ -244,15 +262,75 @@ def menu():
         ))
         con.commit()
 
-    cur.execute("SELECT * FROM menu ORDER BY date DESC")
+    cur.execute("""
+    SELECT id, date, breakfast, lunch, dinner
+    FROM menu
+    ORDER BY date DESC
+""")
     data = cur.fetchall()
     con.close()
 
     if role in ['principal', 'incharge']:
-        return render_template('mess_incharge/menu.html', role=role, data=data)
+        return render_template(
+            'mess_incharge/menu.html',
+            role=role,
+            data=data
+        )
     else:
-        return render_template('student/menu.html', role=role, data=data)
+        return render_template(
+            'student/menu.html',
+            role=role,
+            data=data
+        )
+
     
+
+@app.route('/menu/delete/<int:id>')
+def delete_menu(id):
+    if session.get('role') not in ['principal', 'incharge']:
+        return redirect('/')
+
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("DELETE FROM menu WHERE id=?", (id,))
+    con.commit()
+    con.close()
+
+    return redirect('/menu')
+
+
+
+@app.route('/menu/edit/<int:id>', methods=['GET', 'POST'])
+def edit_menu(id):
+    if session.get('role') not in ['principal', 'incharge']:
+        return redirect('/')
+
+    con = get_db()
+    cur = con.cursor()
+
+    if request.method == 'POST':
+        cur.execute("""
+            UPDATE menu
+            SET date=?, breakfast=?, lunch=?, dinner=?
+            WHERE id=?
+        """, (
+            request.form['date'],
+            request.form['breakfast'],
+            request.form['lunch'],
+            request.form['dinner'],
+            id
+        ))
+        con.commit()
+        con.close()
+        return redirect('/menu')
+
+    cur.execute("SELECT * FROM menu WHERE id=?", (id,))
+    data = cur.fetchone()
+    con.close()
+
+    return render_template('mess_incharge/edit_menu.html', data=data)
+
+
 
     # ================= MENU PDF =================
 @app.route('/menu/pdf')
@@ -296,6 +374,141 @@ def menu_pdf():
         download_name="menu_report.pdf",
         mimetype="application/pdf"
     )
+@app.route("/student/profile", methods=["GET","POST"])
+def student_profile():
+
+    # login check
+    if "email" not in session or session["role"] != "student":
+        return redirect("/")
+
+    email = session["email"]
+
+    con = sqlite3.connect("database/mess.db")
+    cur = con.cursor()
+
+    if request.method == "POST":
+
+        name     = request.form.get("name")
+        branch   = request.form.get("branch")
+        semester = request.form.get("semester")
+        phone    = request.form.get("phone")
+        address  = request.form.get("address")
+
+        photo_name = None
+        file = request.files.get("photo")
+
+        if file and file.filename:
+            os.makedirs("static/uploads", exist_ok=True)
+            photo_name = f"{email}_{file.filename}"
+            file.save(os.path.join("static/uploads", photo_name))
+
+        cur.execute("SELECT id FROM student_profile WHERE email=?", (email,))
+        row = cur.fetchone()
+
+        if row:
+            cur.execute("""
+                UPDATE student_profile
+                SET name=?, branch=?, semester=?, phone=?, address=?,
+                    photo = COALESCE(?, photo)
+                WHERE email=?
+            """, (name, branch, semester, phone, address, photo_name, email))
+        else:
+            cur.execute("""
+                INSERT INTO student_profile
+                (email,name,branch,semester,phone,address,photo)
+                VALUES (?,?,?,?,?,?,?)
+            """, (email, name, branch, semester, phone, address, photo_name))
+
+        con.commit()
+        return redirect(f"/student/view/{email}")
+
+    cur.execute("SELECT * FROM student_profile WHERE email=?", (email,))
+    data = cur.fetchone()
+
+    con.close()
+    return render_template("student/profile.html", data=data, role=session["role"])
+
+
+
+
+
+
+
+#search student
+@app.route("/students")
+def students_list():
+
+    if "role" not in session or session["role"] not in ("principal","incharge"):
+        return redirect("/")
+
+    q = request.args.get("q","")
+
+    con = sqlite3.connect("database/mess.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        SELECT * FROM student_profile
+        WHERE name LIKE ? OR email LIKE ?
+    """, (f"%{q}%", f"%{q}%"))
+
+    data = cur.fetchall()
+    con.close()
+
+    return render_template("principal/students.html", data=data, role=session["role"])
+
+
+
+
+
+
+@app.route('/student/profile/pdf')
+def student_profile_pdf():
+    if session.get('role') != 'student':
+        return redirect('/')
+
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM student_profile WHERE email=?", (session['user'],))
+    s = cur.fetchone()
+    con.close()
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    styles = getSampleStyleSheet()
+
+    elements = [
+        Paragraph("<b>Student ID Card</b>", styles['Title']),
+        Paragraph(f"Name: {s[2]}", styles['Normal']),
+        Paragraph(f"Email: {s[1]}", styles['Normal']),
+        Paragraph(f"Branch: {s[4]}", styles['Normal']),
+        Paragraph(f"Semester: {s[5]}", styles['Normal']),
+        Paragraph(f"Phone: {s[7]}", styles['Normal']),
+    ]
+
+    doc.build(elements)
+    buffer.seek(0)
+
+    return send_file(buffer, as_attachment=True,
+                     download_name="student_id.pdf",
+                     mimetype="application/pdf")
+
+
+
+
+#viw
+@app.route("/student/view/<email>")
+def view_student(email):
+    if "user" not in session or session["role"] not in ("principal","incharge"):
+        return redirect("/")
+
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM student_profile WHERE email=?", (email,))
+    s = cur.fetchone()
+
+    return render_template("principal/view_student.html", s=s)
+
+
 
 
 

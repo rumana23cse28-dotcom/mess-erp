@@ -1,248 +1,251 @@
+/* ================= ROOT THEME ================= */
 :root {
-  --primary: #1e3a8a;       /* Deep Blue */
-  --primary-hover: #16337a;
-  --dark: #0f172a;          /* Dark Sidebar */
-  --success: #16a34a;       /* Green */
-  --danger: #dc2626;        /* Red */
-  --light-bg: #f8fafc;      /* Light page background */
-  --card-bg: #ffffff;        /* Card background */
-  --shadow-color: rgba(0, 0, 0, 0.1);
-  --sidebar-width: 220px;
-  --sidebar-collapsed: 60px;
+  --primary: linear-gradient(135deg, #2563eb, #1e40af);
+  --primary-solid: #2563eb;
+  --accent: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+
+  --dark: #0f172a;
+  --light: #f8fafc;
+  --card: #ffffff;
+
+  --text-dark: #1f2937;
+  --text-light: #94a3b8;
+
+  --shadow-sm: 0 4px 10px rgba(0,0,0,0.08);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.12);
+
+  --radius: 14px;
 }
 
-/* ---------------- BODY ---------------- */
+/* ================= GLOBAL ================= */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  padding: 0;
-  background-color: var(--light-bg);
-  color: #1f2937;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: var(--light);
+  color: var(--text-dark);
 }
 
-/* ---------------- NAVBAR ---------------- */
-nav, .navbar {
+/* ================= NAVBAR ================= */
+.navbar {
   background: var(--primary);
   color: #fff;
-  padding: 12px 20px;
+  padding: 14px 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 6px var(--shadow-color);
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  box-shadow: var(--shadow-sm);
 }
 
-nav a, .navbar a {
+.navbar h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.navbar a {
   color: #fff;
-  margin-right: 15px;
   text-decoration: none;
+  margin-left: 18px;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: opacity 0.2s;
 }
 
-nav a:hover, .navbar a:hover {
-  color: #fbbf24; /* subtle gold hover */
+.navbar a:hover {
+  opacity: 0.85;
 }
 
-/* ---------------- SIDEBAR ---------------- */
+/* ================= SIDEBAR ================= */
 .sidebar {
-  background-color: var(--dark);
-  color: #fff;
-  width: var(--sidebar-width);
-  min-height: 100vh;
+  width: 230px;
+  background: var(--dark);
   position: fixed;
   top: 0;
   left: 0;
-  padding-top: 20px;
-  transition: width 0.3s;
-}
-
-.sidebar h3 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: bold;
-  color: var(--primary);
+  height: 100vh;
+  padding-top: 70px;
 }
 
 .sidebar a {
   display: block;
-  color: #fff;
-  padding: 12px 20px;
-  margin-bottom: 5px;
-  border-radius: 8px;
+  padding: 14px 22px;
+  margin: 6px 14px;
+  color: #cbd5f5;
+  text-decoration: none;
+  border-radius: 10px;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: all 0.25s;
 }
 
 .sidebar a:hover {
-  background-color: var(--primary);
-  transform: translateX(3px);
+  background: var(--primary-solid);
+  color: #fff;
+  transform: translateX(4px);
 }
 
-/* ---------------- MAIN CONTENT ---------------- */
+/* ================= MAIN CONTENT ================= */
 .main-content {
-  margin-left: var(--sidebar-width);
-  padding: 25px;
-  transition: margin-left 0.3s;
+  margin-left: 230px;
+  padding: 30px;
 }
 
-/* ---------------- CARDS ---------------- */
+/* ================= HEADINGS ================= */
+h1, h2, h3, h4 {
+  color: var(--primary-solid);
+  margin-bottom: 15px;
+}
+
+/* ================= CARDS ================= */
 .card {
-  background: var(--card-bg);
+  background: var(--card);
+  border-radius: var(--radius);
   padding: 25px;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px var(--shadow-color);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 25px;
+  transition: transform 0.25s;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px var(--shadow-color);
+  transform: translateY(-4px);
 }
 
-/* ---------------- HEADINGS ---------------- */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--primary);
-  margin-bottom: 15px;
-  font-weight: 600;
+/* ================= DASHBOARD STATS ================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 22px;
 }
 
-/* ---------------- BUTTONS ---------------- */
-.btn-primary {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-  font-weight: 600;
-  transition: all 0.2s;
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f1f5f9);
+  padding: 22px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
 }
 
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-  border-color: var(--primary-hover);
+.stat-card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-light);
 }
 
-.btn-google {
-  background-color: #fff;
-  color: #444;
-  border: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-weight: 500;
-  padding: 10px;
-  border-radius: 8px;
-  transition: all 0.2s;
+.stat-card h1 {
+  margin-top: 10px;
+  font-size: 32px;
 }
 
-.btn-google:hover {
-  background-color: #f3f4f6;
-  transform: translateY(-2px);
-}
-
-/* ---------------- TABLES ---------------- */
+/* ================= TABLES ================= */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
 }
 
+table thead {
+  background: #f1f5f9;
+}
+
 table th, table td {
-  padding: 12px 15px;
-  text-align: left;
+  padding: 14px 16px;
   border-bottom: 1px solid #e5e7eb;
 }
 
 table th {
-  background-color: #f3f4f6;
   font-weight: 600;
 }
 
-table tr:hover {
-  background-color: #fef3c7; /* subtle highlight */
+table tbody tr:hover {
+  background: #f8fafc;
 }
 
-/* ---------------- STOCK STATUS ---------------- */
-.stock-ok {
-  color: var(--success);
-  font-weight: bold;
-}
-
-.stock-low {
-  color: var(--danger);
-  font-weight: bold;
-}
-
-/* ---------------- ROLE BADGES ---------------- */
-.role-badge {
-  display: inline-block;
-  padding: 6px 12px;
+/* ================= BUTTONS ================= */
+.btn {
+  padding: 10px 18px;
   border-radius: 10px;
   font-weight: 600;
-  color: #fff;
-}
-
-.role-principal { background-color: var(--primary); }
-.role-incharge { background-color: var(--dark); }
-.role-student { background-color: var(--success); }
-
-/* ---------------- INCHARGE DASHBOARD SPECIFIC ---------------- */
-.incharge-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.incharge-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.incharge-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 6px 18px var(--shadow-color);
+  border: none;
+  cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.incharge-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px var(--shadow-color);
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
-.incharge-table-container {
-  overflow-x: auto;
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
 }
 
-.incharge-table {
+.btn-success {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ================= GOOGLE BUTTON ================= */
+.btn-google {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 12px;
   width: 100%;
-  border-collapse: collapse;
-}
-
-.incharge-table th, .incharge-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
-}
-
-.incharge-table th {
-  background-color: #f3f4f6;
+  border-radius: 12px;
   font-weight: 600;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
 }
 
-.incharge-table tr:hover {
-  background-color: #fef3c7;
+.btn-google:hover {
+  background: #f8fafc;
 }
 
-/* ---------------- RESPONSIVE ---------------- */
-@media screen and (max-width: 768px) {
-  .sidebar { width: var(--sidebar-collapsed); }
-  .main-content { margin-left: var(--sidebar-collapsed); }
-  nav a { display: none; }
-  .incharge-cards { grid-template-columns: 1fr; }
+/* ================= ROLE BADGES ================= */
+.role {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.role-principal { background: #2563eb; }
+.role-incharge { background: #0f172a; }
+.role-student { background: #16a34a; }
+
+/* ================= STATUS ================= */
+.status-paid {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.status-due {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width: 768px) {
+  .sidebar {
+    width: 70px;
+  }
+  .main-content {
+    margin-left: 70px;
+    padding: 20px;
+  }
+  .sidebar a {
+    text-align: center;
+    padding: 14px 10px;
+  }
 }

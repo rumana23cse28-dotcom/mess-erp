@@ -1,31 +1,62 @@
-<!-- Student Dashboard -->
 {% extends "base.html" %}
 {% block content %}
 
-<h3 class="mb-4">Student Dashboard</h3>
-
-<div class="card p-3 mb-4">
-  <h5>Available Mess Stock (View Only)</h5>
-  <p class="text-muted">Students can only view remaining stock.</p>
+<!-- PAGE HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="fw-bold">Student Dashboard</h2>
+  <span class="role role-student">STUDENT</span>
 </div>
 
-<table class="table table-bordered table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>Item</th>
-      <th>Remaining Quantity</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in data %}
-    <tr>
-      <td>{{ row[0] }}</td>
-      <td class="{% if row[1] < 5 %}text-danger fw-bold{% else %}text-success fw-bold{% endif %}">
-        {{ row[1] }}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!-- INFO CARD -->
+<div class="card mb-4">
+  <h4>Mess Stock Information</h4>
+  <p class="text-muted mb-0">
+    You can view the remaining mess stock items.  
+    Low stock items are highlighted for awareness.
+  </p>
+</div>
 
-{% endblock %}
+<!-- STOCK TABLE -->
+<div class="card">
+  <h4 class="mb-3">Available Mess Stock</h4>
+
+  <div class="table-responsive">
+    <table class="table modern-table">
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th class="text-center">Remaining Quantity</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for row in data %}
+        <tr>
+          <td class="fw-semibold">{{ row[0] }}</td>
+
+          <td class="text-center fw-bold
+              {% if row[1] < 5 %}
+                text-danger
+              {% else %}
+                text-success
+              {% endif %}
+          ">
+            {{ row[1] }}
+          </td>
+
+          <td class="text-center">
+            {% if row[1] < 5 %}
+              <span class="badge bg-danger">Low Stock</span>
+            {% else %}
+              <span class="badge bg-success">Available</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %} 

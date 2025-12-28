@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-3">Student Profiles</h3>
+
+<form method="GET" class="mb-3">
+  <input type="text" name="q" class="form-control"
+         placeholder="Search by name or email"
+         value="{{ request.args.get('q','') }}">
+</form>
+
+<table class="table table-hover">
+<thead class="table-dark">
+<tr>
+  <th>Photo</th><th>Name</th><th>Email</th><th>Branch</th><th>Sem</th><th>View</th>
+</tr>
+</thead>
+
+<tbody>
+{% for s in data %}
+<tr>
+
+<td>
+  {% if s[9] %}
+    <img src="/static/uploads/{{ s[9] }}" width="55" class="rounded-circle border">
+  {% else %}
+    <img src="https://via.placeholder.com/55" width="55" class="rounded-circle border">
+  {% endif %}
+</td>
+
+<td>{{ s[2] }}</td>
+<td>{{ s[1] }}</td>
+<td>{{ s[4] }}</td>
+<td>{{ s[5] }}</td>
+
+<td>
+  <a class="btn btn-sm btn-primary" href="/student/view/{{ s[1] }}">
+    Profile
+  </a>
+</td>
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

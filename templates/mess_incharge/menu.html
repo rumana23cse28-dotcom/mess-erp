@@ -6,7 +6,7 @@
   <h3>Mess Menu Management</h3>
 
   {% if role == 'principal' %}
-  <a href="/menu/pdf" class="btn btn-primary">Download Menu PDF</a>
+    <a href="/menu/pdf" class="btn btn-primary">Download Menu PDF</a>
   {% endif %}
 </div>
 
@@ -38,8 +38,13 @@
       <th>Breakfast</th>
       <th>Lunch</th>
       <th>Dinner</th>
+
+      {% if role in ['principal', 'incharge'] %}
+        <th>Actions</th>
+      {% endif %}
     </tr>
   </thead>
+
   <tbody>
     {% for row in data %}
     <tr>
@@ -47,6 +52,17 @@
       <td>{{ row[2] }}</td>
       <td>{{ row[3] }}</td>
       <td>{{ row[4] }}</td>
+
+      {% if role in ['principal', 'incharge'] %}
+      <td>
+        <a href="/menu/edit/{{ row[0] }}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="/menu/delete/{{ row[0] }}"
+           class="btn btn-sm btn-danger"
+           onclick="return confirm('Delete this menu?')">
+           Delete
+        </a>
+      </td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>

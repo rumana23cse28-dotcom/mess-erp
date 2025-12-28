@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow p-4 mx-auto" style="max-width:650px">
+
+  <div class="text-center mb-3">
+    {% if data and data[9] %}
+      <img src="/static/uploads/{{ data[9] }}" class="rounded-circle" width="120">
+    {% else %}
+      <div class="rounded-circle bg-light" style="width:120px;height:120px;border:3px solid #3b82f6"></div>
+    {% endif %}
+    <p class="mt-2 text-muted">{{ data[1] }}</p>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data">
+
+    <label>Full Name</label>
+    <input name="name" class="form-control mb-2" value="{{ data[2] or '' }}">
+
+    <label>Branch</label>
+    <input name="branch" class="form-control mb-2" value="{{ data[4] or '' }}">
+
+    <label>Semester</label>
+    <input name="semester" class="form-control mb-2" value="{{ data[5] or '' }}">
+
+    <label>Phone</label>
+    <input name="phone" class="form-control mb-2" value="{{ data[7] or '' }}">
+
+    <label>Address</label>
+    <textarea name="address" class="form-control mb-2">{{ data[8] or '' }}</textarea>
+
+    <label>Profile Photo</label>
+    <input type="file" name="photo" class="form-control mb-3">
+
+    <button class="btn btn-success w-100">Save Profile</button>
+  </form>
+
+  <a href="/student/profile/pdf" class="btn btn-outline-primary mt-3">
+    Download ID Card
+  </a>
+
+</div>
+
+{% endblock %}

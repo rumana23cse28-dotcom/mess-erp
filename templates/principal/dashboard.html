@@ -1,33 +1,37 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<h3 class="mb-4">Principal Dashboard</h3>
+<!-- PAGE HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="fw-bold">Principal Dashboard</h2>
+  <span class="role role-principal">ADMIN</span>
+</div>
 
-<!-- TOP STATS -->
-<div class="row mb-4">
+<!-- STATS GRID -->
+<div class="stats-grid mb-4">
 
-  <div class="col-md-4">
-    <div class="card p-3 shadow-sm">
-      <h5>Total Inventory Items</h5>
-      <p class="fs-4 text-primary">{{ total_items }}</p>
-    </div>
+  <div class="stat-card">
+    <h3>Total Inventory Items</h3>
+    <h1>{{ total_items }}</h1>
+    <a href="/inventory" class="btn btn-sm btn-primary mt-2">
+      View Inventory →
+    </a>
   </div>
 
-  <div class="col-md-4">
-    <div class="card p-3 shadow-sm">
-      <h5>Low Stock Alerts</h5>
-      <p class="fs-4 text-danger">{{ low_stock }}</p>
-    </div>
+  <div class="stat-card">
+    <h3>Low Stock Alerts</h3>
+    <h1 class="text-danger">{{ low_stock }}</h1>
+    <p class="text-muted mt-1">Items below safe level</p>
   </div>
 
-  <div class="col-md-4">
-    <div class="card p-3 shadow-sm">
-      <h5>Quick Actions</h5>
-      <a href="/inventory" class="btn btn-sm btn-success mt-2">
-        Manage Inventory
-      </a>
-    </div>
+  <div class="stat-card">
+    <h3>Attendance Overview</h3>
+    <p class="text-muted mt-2">
+      Real-time student attendance analytics
+    </p>
+    <a href="/attendance/summary" class="btn btn-sm btn-success mt-2">
+      View Attendance →
+    </a>
   </div>
 
 </div>
@@ -35,42 +39,43 @@
 <!-- SECOND ROW -->
 <div class="row mb-4">
 
-  <div class="col-md-4">
-    <div class="card p-3 shadow-sm">
-      <h5>Average Attendance</h5>
-      <p class="fs-6 text-success">Live Attendance Data</p>
-      <a href="/attendance/summary" class="btn btn-sm btn-primary">
-        View Summary
-      </a>
+  <div class="col-md-6">
+    <div class="card">
+      <h4 class="mb-3">Mess Bill Status</h4>
+      <p class="text-muted mb-3">
+        Paid vs Due bills for current cycle
+      </p>
+      <canvas id="billChart" height="220"></canvas>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card p-3 shadow-sm">
-      <h5>Payment Status</h5>
-      <p class="fs-6">Paid vs Due Bills</p>
-      <a href="#billChart" class="btn btn-sm btn-warning mt-2">
-        View Chart Below
-      </a>
+  <div class="col-md-6">
+    <div class="card">
+      <h4 class="mb-3">Quick Actions</h4>
+
+      <div class="d-grid gap-3">
+        <a href="/inventory" class="btn btn-primary">
+          Manage Inventory
+        </a>
+
+        <a href="/attendance" class="btn btn-success">
+          Mark / View Attendance
+        </a>
+
+        <a href="/bill" class="btn btn-warning">
+          View Bills
+        </a>
+
+        <a href="/report/monthly/pdf" class="btn btn-danger">
+          Download Monthly Report (PDF)
+        </a>
+      </div>
     </div>
   </div>
 
 </div>
 
-<hr class="my-4">
-
-<!-- BILL CHART -->
-<h4 class="mb-3">Mess Bill Status</h4>
-
-<div class="row">
-  <div class="col-md-5">
-    <div class="card p-3 shadow-sm text-center">
-      <canvas id="billChart"></canvas>
-    </div>
-  </div>
-</div>
-
-<!-- Chart.js -->
+<!-- CHART.JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -82,13 +87,22 @@ new Chart(ctx, {
     labels: ['Paid', 'Due'],
     datasets: [{
       data: [{{ paid }}, {{ due }}],
-      backgroundColor: ['#28a745', '#dc3545']
+      backgroundColor: ['#22c55e', '#ef4444'],
+      borderWidth: 0
     }]
   },
   options: {
+    cutout: '70%',
     plugins: {
       legend: {
-        position: 'bottom'
+        position: 'bottom',
+        labels: {
+          padding: 20,
+          font: {
+            size: 14,
+            weight: '600'
+          }
+        }
       }
     }
   }

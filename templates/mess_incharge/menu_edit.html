@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Edit Menu</h3>
+
+<div class="card p-4">
+  <form method="POST">
+
+    <div class="row g-3">
+
+      <div class="col-md-3">
+        <input type="date" name="date"
+               value="{{ data[1] }}"
+               class="form-control" required>
+      </div>
+
+      <div class="col-md-3">
+        <input type="text" name="breakfast"
+               value="{{ data[2] }}"
+               class="form-control" required>
+      </div>
+
+      <div class="col-md-3">
+        <input type="text" name="lunch"
+               value="{{ data[3] }}"
+               class="form-control" required>
+      </div>
+
+      <div class="col-md-3">
+        <input type="text" name="dinner"
+               value="{{ data[4] }}"
+               class="form-control" required>
+      </div>
+
+    </div>
+
+    <button class="btn btn-primary mt-3">Update Menu</button>
+    <a href="/menu" class="btn btn-secondary mt-3">Cancel</a>
+
+  </form>
+</div>
+
+
+
+<h3>Edit Menu</h3>
+
+<form method="POST" class="card p-4">
+  <input type="date" name="date" class="form-control mb-3" value="{{ data[1] }}" required>
+
+  <input type="text" name="breakfast" class="form-control mb-3" value="{{ data[2] }}" required>
+
+  <input type="text" name="lunch" class="form-control mb-3" value="{{ data[3] }}" required>
+
+  <input type="text" name="dinner" class="form-control mb-3" value="{{ data[4] }}" required>
+
+  <button class="btn btn-success">Update Menu</button>
+  <a href="/menu" class="btn btn-secondary">Cancel</a>
+</form>
+
+
+
+
+{% endblock %}

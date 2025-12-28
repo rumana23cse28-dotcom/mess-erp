@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS attendance (
 )
 """)
 
-# ---------------- MESS BILL TABLE (NEW) ----------------
+# ---------------- MESS BILL TABLE ----------------
 cur.execute("""
 CREATE TABLE IF NOT EXISTS mess_bill (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,6 +62,25 @@ CREATE TABLE IF NOT EXISTS mess_bill (
     status TEXT
 )
 """)
+
+cur.execute("""
+CREATE TABLE IF NOT EXISTS student_profile (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE,
+    name TEXT,
+    role TEXT,
+    branch TEXT,
+    semester TEXT,
+    phone TEXT,
+    address TEXT,
+    photo TEXT,
+    role TEXT,
+)
+""")
+
+
+
+
 
 # ---------------- SAFE DEFAULT USERS INSERT ----------------
 def insert_user(email, password, role):
@@ -80,4 +99,4 @@ insert_user('student@gmail.com', '123', 'student')
 con.commit()
 con.close()
 
-print("✅ Database created with ALL tables (Users, Inventory, Menu, Attendance, Mess Bill)")
+print("✅ Database created successfully with ALL tables")

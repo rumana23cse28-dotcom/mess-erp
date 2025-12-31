@@ -19,6 +19,7 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 DB = 'database/mess.db'
 PER_DAY_CHARGE = 120
 
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 
 oauth = OAuth(app)
 
@@ -79,29 +80,41 @@ def google_callback():
     from google.oauth2 import id_token
     from google.auth.transport import requests
 
-    token = request.args.get("credential")
+    code = request.args.get("code")
+
+    if not code:
+        return "Authorization code missing", 400
 
     try:
-        data = id_token.verify_oauth2_token(
-            token,
+        token_url = "https://oauth2.googleapis.com/token"
+
+        data = {
+            "code": code,
+            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+            "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+            "redirect_uri": os.getenv("GOOGLE_REDIRECT_URI"),
+            "grant_type": "authorization_code",
+        }
+
+        token_response = requests.Request().session.post(token_url, data=data).json()
+
+        idinfo = id_token.verify_oauth2_token(
+            token_response["id_token"],
             requests.Request(),
             os.getenv("GOOGLE_CLIENT_ID")
         )
 
-        email = data.get("email")
-        name  = data.get("name", "User")
-
-        if not email:
-            return "Google did not return email. Enable email scope.", 400
+        email = idinfo["email"]
 
         session["email"] = email
-        session["role"] = "student"   # default role
+        session["role"] = "student"
 
         return redirect("/student/dashboard")
 
     except Exception as e:
         print("GOOGLE LOGIN ERROR:", e)
         return "Google login failed", 400
+
 
 
 

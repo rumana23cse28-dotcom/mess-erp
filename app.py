@@ -76,34 +76,33 @@ def google_login():
 
 @app.route("/auth/google/callback")
 def google_callback():
-    token = oauth.google.authorize_access_token()
-    user_info = oauth.google.parse_id_token(token)
+    from google.oauth2 import id_token
+    from google.auth.transport import requests
 
-    # ALWAYS set email first
-    email = user_info.get("email")
+    token = request.args.get("credential")
 
-    if not email:
-        return "Google login failed: email not found", 400
-
-    session["user"] = email
-
-    # Save user to DB if not exists
-    con = get_db()
-    cur = con.cursor()
-
-    cur.execute("SELECT email FROM users WHERE email=?", (email,))
-    exist = cur.fetchone()
-
-    if not exist:
-        cur.execute(
-            "INSERT INTO users (email, name, role) VALUES (?, ?, 'student')",
-            (email, user_info.get("name", ""))
+    try:
+        data = id_token.verify_oauth2_token(
+            token,
+            requests.Request(),
+            os.getenv("GOOGLE_CLIENT_ID")
         )
-        con.commit()
 
-    con.close()
+        email = data.get("email")
+        name  = data.get("name", "User")
 
-    return redirect("/student/dashboard")
+        if not email:
+            return "Google did not return email. Enable email scope.", 400
+
+        session["email"] = email
+        session["role"] = "student"   # default role
+
+        return redirect("/student/dashboard")
+
+    except Exception as e:
+        print("GOOGLE LOGIN ERROR:", e)
+        return "Google login failed", 400
+
 
 
 

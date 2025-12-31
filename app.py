@@ -68,43 +68,61 @@ def login():
 
 # ===============
 # ================= GOOGLE LOGIN =================
+@app.route("/login/google")
+def google_login():
+    redirect_uri = url_for("google_callback", _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+
 @app.route("/auth/google/callback")
 def google_callback():
-    try:
-        token = oauth.google.authorize_access_token()
-        user_info = oauth.google.parse_id_token(token)
-    except Exception as e:
-        # State mismatch / invalid response -> user ko wapas login page bhej do
-        print("GOOGLE LOGIN ERROR:", e)
-        return redirect("/")
+    token = oauth.google.authorize_access_token()
+    user_info = oauth.google.get(
+        "https://www.googleapis.com/oauth2/v2/userinfo"
+    ).json()
 
-    # ---- EMAIL SAFE EXTRACT ----
-    email = user_info.get("email")
-    name  = user_info.get("name", "")
+        # ---------- AUTO CREATE STUDENT PROFILE ----------
+    con = get_db()
+    cur = con.cursor()
 
-    if not email:
-        return redirect("/")
+    cur.execute(
+        "INSERT OR IGNORE INTO student_profile (email, name) VALUES (?, ?)",
+        (email, user_info.get("name", ""))
+    )
+    con.commit()
 
-    session["email"] = email
 
-    # role detect
+    email = user_info["email"]
+
+    # ROLE DECISION
+    if email == "principal@gmail.com":
+        role = "principal"
+    elif email == "incharge@gmail.com":
+        role = "incharge"
+    else:
+        role = "student"
+
     con = get_db()
     cur = con.cursor()
 
     cur.execute("SELECT role FROM users WHERE email=?", (email,))
-    row = cur.fetchone()
+    user = cur.fetchone()
 
-    if row:
-        session["role"] = row[0]
-    else:
-        session["role"] = "student"
+    if not user:
         cur.execute(
-            "INSERT OR IGNORE INTO users(email,role) VALUES (?,?)",
-            (email,"student")
+            "INSERT INTO users (email, password, role) VALUES (?,?,?)",
+            (email, "google", role)
         )
         con.commit()
+    else:
+        role = user[0]
 
-    return redirect(f"/{session['role']}/dashboard")
+    con.close()
+
+    session["user"] = email
+    session["role"] = role
+
+    return redirect(f"/{role}/dashboard")
 
 
 # ================= DASHBOARDS =================

@@ -550,7 +550,7 @@ def attendance():
 
     if role == 'student':
         cur.execute("SELECT date, status FROM attendance WHERE student_email=?",
-                    (session['user'],))
+                    (session['email'],))
         data = cur.fetchall()
         template = 'student/attendance.html'
     elif role == 'principal':
@@ -582,7 +582,7 @@ def attendance_summary():
                    SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END)
             FROM attendance
             WHERE student_email=?
-        """, (session['user'],))
+        """, (session['email'],))
 
         total, present = cur.fetchone()
         percent = round((present / total) * 100, 2) if total else 0

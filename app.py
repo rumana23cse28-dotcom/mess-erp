@@ -1,10 +1,10 @@
 import os
-
-from flask import Flask, render_template, request, redirect, session, send_file , url_for
+import uuid
+from flask import Flask, render_template, request, redirect, session, send_file , url_for,flash
 import sqlite3
 from datetime import date
 from io import BytesIO
-
+from werkzeug.utils import secure_filename
 # -------- REPORTLAB --------
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -32,7 +32,7 @@ oauth.register(
     }
 )
 
-from werkzeug.utils import secure_filename
+
 
 UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -377,11 +377,10 @@ def menu_pdf():
 @app.route("/student/profile", methods=["GET","POST"])
 def student_profile():
 
-    # login check
-    if "email" not in session or session["role"] != "student":
+    if "role" not in session or session["role"] != "student":
         return redirect("/")
 
-    email = session["email"]
+    email = session.get("email") or session.get("user")
 
     con = sqlite3.connect("database/mess.db")
     cur = con.cursor()
@@ -398,8 +397,13 @@ def student_profile():
         file = request.files.get("photo")
 
         if file and file.filename:
+
             os.makedirs("static/uploads", exist_ok=True)
-            photo_name = f"{email}_{file.filename}"
+
+            photo_name = secure_filename(
+                f"{email}_{uuid.uuid4().hex}_{file.filename}"
+            )
+
             file.save(os.path.join("static/uploads", photo_name))
 
         cur.execute("SELECT id FROM student_profile WHERE email=?", (email,))
@@ -420,13 +424,18 @@ def student_profile():
             """, (email, name, branch, semester, phone, address, photo_name))
 
         con.commit()
-        return redirect(f"/student/view/{email}")
+        flash("Profile updated successfully!")
+        return redirect("/student/profile")
 
     cur.execute("SELECT * FROM student_profile WHERE email=?", (email,))
     data = cur.fetchone()
 
     con.close()
     return render_template("student/profile.html", data=data, role=session["role"])
+
+
+
+
 
 
 
@@ -442,19 +451,32 @@ def students_list():
         return redirect("/")
 
     q = request.args.get("q","")
+    branch = request.args.get("branch","")
+    sem = request.args.get("sem","")
 
     con = sqlite3.connect("database/mess.db")
     cur = con.cursor()
 
-    cur.execute("""
+    query = """
         SELECT * FROM student_profile
-        WHERE name LIKE ? OR email LIKE ?
-    """, (f"%{q}%", f"%{q}%"))
+        WHERE (name LIKE ? OR email LIKE ?)
+    """
+    params = [f"%{q}%", f"%{q}%"]
 
+    if branch:
+        query += " AND branch=?"
+        params.append(branch)
+
+    if sem:
+        query += " AND semester=?"
+        params.append(sem)
+
+    cur.execute(query, params)
     data = cur.fetchall()
     con.close()
 
-    return render_template("principal/students.html", data=data, role=session["role"])
+    return render_template("principal/students.html", data=data, q=q, branch=branch, sem=sem)
+
 
 
 
@@ -498,15 +520,18 @@ def student_profile_pdf():
 #viw
 @app.route("/student/view/<email>")
 def view_student(email):
-    if "user" not in session or session["role"] not in ("principal","incharge"):
+
+    if "role" not in session or session["role"] not in ("principal","incharge"):
         return redirect("/")
 
-    con = get_db()
+    con = sqlite3.connect("database/mess.db")
     cur = con.cursor()
     cur.execute("SELECT * FROM student_profile WHERE email=?", (email,))
     s = cur.fetchone()
+    con.close()
 
     return render_template("principal/view_student.html", s=s)
+
 
 
 

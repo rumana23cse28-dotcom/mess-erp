@@ -1,44 +1,98 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card shadow p-4 mx-auto" style="max-width:650px">
+<div class="card" style="max-width:900px;margin:auto">
 
-  <div class="text-center mb-3">
-    {% if data and data[9] %}
-      <img src="/static/uploads/{{ data[9] }}" class="rounded-circle" width="120">
-    {% else %}
-      <div class="rounded-circle bg-light" style="width:120px;height:120px;border:3px solid #3b82f6"></div>
-    {% endif %}
-    <p class="mt-2 text-muted">{{ data[1] }}</p>
+  <h2>My Profile</h2>
+
+  <!-- VIEW SECTION -->
+  {% if data %}
+  <div id="viewBox">
+
+    <div style="display:flex;gap:20px;margin-bottom:20px">
+      <img src="/static/uploads/{{ data[7] or 'default.png' }}"
+           style="width:130px;height:130px;border-radius:14px;object-fit:cover">
+
+      <div>
+        <h3>{{ data[2] }}</h3>
+        <p><b>Email:</b> {{ data[1] }}</p>
+        <p><b>Branch:</b> {{ data[3] or '—' }}</p>
+        <p><b>Semester:</b> {{ data[4] or '—' }}</p>
+        <p><b>Phone:</b> {{ data[5] or '—' }}</p>
+        <p><b>Address:</b> {{ data[6] or '—' }}</p>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="toggleEdit(true)">Edit Profile</button>
+
+  </div>
+  {% endif %}
+
+  <!-- EDIT FORM -->
+  <div id="editBox" {% if data %}style="display:none"{% endif %}>
+
+    <h4>Edit / Update</h4>
+
+    <form method="POST" enctype="multipart/form-data">
+
+      <div class="stats-grid">
+
+        <div>
+          <label>Name</label>
+          <input class="form-control" name="name"
+                 value="{{ (data[2] or '') if data else '' }}" required>
+        </div>
+
+        <div>
+          <label>Branch</label>
+          <input class="form-control" name="branch"
+                 value="{{ (data[3] or '') if data else '' }}">
+        </div>
+
+        <div>
+          <label>Semester</label>
+          <input class="form-control" name="semester"
+                 value="{{ (data[4] or '') if data else '' }}">
+        </div>
+
+        <div>
+          <label>Phone</label>
+          <input class="form-control" name="phone"
+                 value="{{ (data[5] or '') if data else '' }}">
+        </div>
+
+        <div style="grid-column:1/-1">
+          <label>Address</label>
+          <textarea class="form-control" name="address" rows="2">
+{{ (data[6] or '') if data else '' }}</textarea>
+        </div>
+
+        <div style="grid-column:1/-1">
+          <label>Profile Photo</label>
+          <input type="file" name="photo" class="form-control">
+        </div>
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-success">Save</button>
+      {% if data %}
+      <button type="button" class="btn btn-danger" onclick="toggleEdit(false)">Cancel</button>
+      {% endif %}
+
+    </form>
+
   </div>
 
-  <form method="POST" enctype="multipart/form-data">
-
-    <label>Full Name</label>
-    <input name="name" class="form-control mb-2" value="{{ data[2] or '' }}">
-
-    <label>Branch</label>
-    <input name="branch" class="form-control mb-2" value="{{ data[4] or '' }}">
-
-    <label>Semester</label>
-    <input name="semester" class="form-control mb-2" value="{{ data[5] or '' }}">
-
-    <label>Phone</label>
-    <input name="phone" class="form-control mb-2" value="{{ data[7] or '' }}">
-
-    <label>Address</label>
-    <textarea name="address" class="form-control mb-2">{{ data[8] or '' }}</textarea>
-
-    <label>Profile Photo</label>
-    <input type="file" name="photo" class="form-control mb-3">
-
-    <button class="btn btn-success w-100">Save Profile</button>
-  </form>
-
-  <a href="/student/profile/pdf" class="btn btn-outline-primary mt-3">
-    Download ID Card
-  </a>
-
 </div>
+
+<script>
+function toggleEdit(show){
+   document.getElementById("editBox").style.display = show ? "block" : "none";
+   const view = document.getElementById("viewBox");
+   if(view) view.style.display = show ? "none" : "block";
+}
+</script>
 
 {% endblock %}

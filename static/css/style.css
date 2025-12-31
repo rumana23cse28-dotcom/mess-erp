@@ -249,3 +249,103 @@ table tbody tr:hover {
     padding: 14px 10px;
   }
 }
+.form-control{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+}
+.form-control:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,.12);
+}
+/* TOP NAVBAR */
+.app-topbar{
+  background:#1f3cf0;
+}
+
+/* SIDEBAR PREMIUM */
+.sidebar{
+  background:#0d1229;
+  transition:0.25s ease-in-out;
+}
+
+.sidebar.collapsed{
+  width:65px;
+}
+
+.sidebar .nav-link{
+  border-radius:10px;
+  margin-bottom:6px;
+  font-weight:500;
+}
+
+.sidebar .nav-link:hover{
+  background:#162055;
+}
+
+/* GLASS CARDS */
+.card{
+  border-radius:18px;
+  border:1px solid rgba(0,0,0,.05);
+  box-shadow:0 12px 28px rgba(0,0,0,.08);
+}
+
+/* STAT CARDS */
+.stat-card{
+  border-radius:16px;
+  padding:18px;
+  background:linear-gradient(145deg,#ffffff,#f2f6ff);
+  border:1px solid #e5e7ff;
+}
+
+/* PAGE TITLE */
+h2{
+  color:#1431d4;
+}
+
+/* TOGGLE BUTTON */
+.toggle-btn{
+  font-size:22px;
+  background:white;
+  border-radius:10px;
+}
+/* Drawer sidebar */
+.sidebar-overlay{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:#0d1229;
+  transition:0.3s ease;
+  z-index:999;
+}
+
+.sidebar-overlay.open{
+  left:0;
+}
+
+/* page dim background when open */
+.body-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.3);
+  display:none;
+  z-index:998;
+}
+
+.body-overlay.show{
+  display:block;
+}
+
+/* links */
+.sidebar-overlay .nav-link{
+  color:#fff;
+  margin:6px 0;
+  border-radius:10px;
+}
+
+.sidebar-overlay .nav-link:hover{
+  background:#17206c;
+}

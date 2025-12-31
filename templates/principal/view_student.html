@@ -1,24 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card p-4" style="max-width:700px;margin:auto;">
-  <div class="text-center">
-    <img src="{{ url_for('static', filename='uploads/' + (s[8] or 'default.png')) }}"
-         style="width:120px;height:120px;border-radius:50%;object-fit:cover">
+<div class="card" style="max-width:900px;margin:auto">
 
-    <h4 class="mt-3">{{ s[2] }}</h4>
-    <p>{{ s[1] }}</p>
+  <h2>Student Profile</h2>
+
+  <div style="display:flex;gap:20px">
+
+    <img src="/static/uploads/{{ s[7] or 'default.png' }}"
+         style="width:140px;height:140px;border-radius:16px;object-fit:cover">
+
+    <div>
+      <h3>{{ s[2] }}</h3>
+      <p><b>Email:</b> {{ s[1] }}</p>
+      <p><b>Branch:</b> {{ s[3] or '—' }}</p>
+      <p><b>Semester:</b> {{ s[4] or '—' }}</p>
+      <p><b>Phone:</b> {{ s[5] or '—' }}</p>
+      <p><b>Address:</b> {{ s[6] or '—' }}</p>
+    </div>
+
   </div>
 
-  <table class="table mt-3">
-    <tr><th>Branch</th><td>{{ s[4] }}</td></tr>
-    <tr><th>Semester</th><td>{{ s[5] }}</td></tr>
-    <tr><th>Phone</th><td>{{ s[6] }}</td></tr>
-    <tr><th>Address</th><td>{{ s[7] }}</td></tr>
-  </table>
-
-  <a href="/students" class="btn btn-secondary w-100">Back</a>
 </div>
-
 
 {% endblock %}

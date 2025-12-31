@@ -77,52 +77,34 @@ def google_login():
 @app.route("/auth/google/callback")
 def google_callback():
     token = oauth.google.authorize_access_token()
-    user_info = oauth.google.get(
-        "https://www.googleapis.com/oauth2/v2/userinfo"
-    ).json()
+    user_info = oauth.google.parse_id_token(token)
 
-        # ---------- AUTO CREATE STUDENT PROFILE ----------
+    # ALWAYS set email first
+    email = user_info.get("email")
+
+    if not email:
+        return "Google login failed: email not found", 400
+
+    session["user"] = email
+
+    # Save user to DB if not exists
     con = get_db()
     cur = con.cursor()
 
-    cur.execute(
-        "INSERT OR IGNORE INTO student_profile (email, name) VALUES (?, ?)",
-        (email, user_info.get("name", ""))
-    )
-    con.commit()
+    cur.execute("SELECT email FROM users WHERE email=?", (email,))
+    exist = cur.fetchone()
 
-
-    email = user_info["email"]
-
-    # ROLE DECISION
-    if email == "principal@gmail.com":
-        role = "principal"
-    elif email == "incharge@gmail.com":
-        role = "incharge"
-    else:
-        role = "student"
-
-    con = get_db()
-    cur = con.cursor()
-
-    cur.execute("SELECT role FROM users WHERE email=?", (email,))
-    user = cur.fetchone()
-
-    if not user:
+    if not exist:
         cur.execute(
-            "INSERT INTO users (email, password, role) VALUES (?,?,?)",
-            (email, "google", role)
+            "INSERT INTO users (email, name, role) VALUES (?, ?, 'student')",
+            (email, user_info.get("name", ""))
         )
         con.commit()
-    else:
-        role = user[0]
 
     con.close()
 
-    session["user"] = email
-    session["role"] = role
+    return redirect("/student/dashboard")
 
-    return redirect(f"/{role}/dashboard")
 
 
 # ================= DASHBOARDS =================

@@ -3,3 +3,5 @@ gunicorn
 authlib
 reportlab
 requests
+google-auth==2.35.0
+google-auth-oauthlib==1.2.1
